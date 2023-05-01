@@ -8,47 +8,122 @@
 import SwiftUI
 
 struct ContentView: View {
+    var vehicles = [  "🚗",  "🚕",  "🚙",  "🚌",  "🚎",  "🏎️",  "🚓",  "🚑",  "🚒",  "🚐",  "🚚",  "🚛",  "🚜",  "🛴",  "🚲",  "🏍️",  "🛵",  "🛺",  "🚍",  "🚘",  "🚖",  "🚔",  "🚂",  "🚆"]
+    
+    @State var emojiCount = 3
+    
+    var removeBtn : some View{
+        Button(
+            action: {
+                if(emojiCount > 0){
+                        emojiCount-=1
+                }
+            },
+            label: {
+                Image(
+                    systemName: "minus.circle"
+                )
+            }
+        )
+    }
+    
+    var addBtn : some View{
+            Button(
+                action: {
+                    if(emojiCount < vehicles.count-1){
+                            emojiCount+=1
+                    }
+                },
+                label: {
+                    Image(
+                        systemName: "plus.circle"
+                    )
+                }
+            )
+    }
+    
     var body: some View {
-        HStack{
-            CardView()
-            CardView()
-            CardView()
-            CardView()
-        }.padding(.horizontal)
+        VStack{
+            ScrollView{
+                LazyVGrid(
+                    columns: [
+                        GridItem(
+                            .adaptive(
+                                minimum: 80
+                            )
+                        )
+                    ]
+                ){
+                    ForEach(
+                        vehicles[0...emojiCount],
+                        id: \.self,
+                        content: {
+                            vehicle in
+                            CardView(
+                                isFaceUp: true,
+                                content: vehicle
+                            ).aspectRatio(
+                                2/3,
+                                contentMode: .fit
+                            )
+                        }
+                    )
+                }.padding(.all)
+            }
+            Spacer()
+            HStack{
+                removeBtn
+                Spacer()
+                addBtn
+            }
+            .padding(.horizontal)
+            .font(.largeTitle)
+        }
     }
 }
 
 struct CardView : View{
+    @State var isFaceUp : Bool = false
+    var content : String
     var body: some View{
             ZStack(
                 alignment: .center,
                 content: {
-                    RoundedRectangle(
-                        cornerRadius: 25.0
+                    let shape = RoundedRectangle(
+                    cornerRadius: 20
                     )
-                    .stroke(
-                        lineWidth: 2
-                    )
-                    .foregroundColor(
-                        Color(
-                            hue: 0.55,
-                            saturation: 0.924,
-                            brightness: 0.798
+                    if(isFaceUp){
+                        shape
+                        .stroke(
+                            lineWidth: 3
                         )
-                    )
-                    RoundedRectangle(
-                        cornerRadius: 25.0
-                    )
-                    .fill()
-                    .foregroundColor(
-                        .white
-                    )
-                    Text("✈️")
-                        .font(.largeTitle)
+                        .foregroundColor(
+                            Color(
+                                hue: 0.55,
+                                saturation: 0.924,
+                                brightness: 0.798
+                            )
+                        )
+                        shape
+                        .fill()
+                        .foregroundColor(
+                            .white
+                        )
+                        Text(content)
+                            .font(.largeTitle)
                         .foregroundColor(Color.pink)
                         .multilineTextAlignment(.center)
+                    }else{
+                        shape
+                        .fill()
+                        .foregroundColor(
+                            .cyan
+                        )
+                    }
                 }
-            )
+            ).onTapGesture {
+                isFaceUp = !isFaceUp
+            }
     }
 }
 
