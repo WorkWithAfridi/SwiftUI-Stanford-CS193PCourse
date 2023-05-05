@@ -11,7 +11,7 @@ func makeCardContent(index: Int)->String{
     return "✌🏼"
 }
 
-class EmojiMemoryGame{
+class EmojiMemoryGame : ObservableObject{
     static let vehicles = [  "🚗",  "🚕",  "🚙",  "🚌",  "🚎",  "🏎️",  "🚓",  "🚑",  "🚒",  "🚐",  "🚚",  "🚛",  "🚜",  "🛴",  "🚲",  "🏍️",  "🛵",  "🛺",  "🚍",  "🚘",  "🚖",  "🚔",  "🚂",  "🚆"]
     
     static func createMemoryGame() -> MemoryGame<String>{
@@ -23,9 +23,14 @@ class EmojiMemoryGame{
         )
     }
 
-    private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()
+    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()
     
     var cards: Array<MemoryGame<String>.Card>{
         return model.cards
+    }
+    
+    func choose(_ card: MemoryGame<String>.Card){
+//        objectWillChange.send()
+        model.choose(card)
     }
 }

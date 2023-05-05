@@ -8,45 +8,41 @@
 import SwiftUI
 
 struct ContentView: View {
-    var vehicles = [  "🚗",  "🚕",  "🚙",  "🚌",  "🚎",  "🏎️",  "🚓",  "🚑",  "🚒",  "🚐",  "🚚",  "🚛",  "🚜",  "🛴",  "🚲",  "🏍️",  "🛵",  "🛺",  "🚍",  "🚘",  "🚖",  "🚔",  "🚂",  "🚆"]
-    
-    @State var emojiCount = 3
+    @ObservedObject var viewModel : EmojiMemoryGame
     
     var body: some View {
-        VStack{
-            ScrollView{
-                LazyVGrid(
-                    columns: [
-                        GridItem(
-                            .adaptive(
-                                minimum: 80
-                            )
+        ScrollView{
+            LazyVGrid(
+                columns: [
+                    GridItem(
+                        .adaptive(
+                            minimum: 80
                         )
-                    ]
-                ){
-                    ForEach(
-                        vehicles[0...emojiCount],
-                        id: \.self,
-                        content: {
-                            vehicle in
-                            CardView(
-                                isFaceUp: true,
-                                content: vehicle
-                            ).aspectRatio(
-                                2/3,
-                                contentMode: .fit
-                            )
-                        }
                     )
-                }.padding(.all)
-            }
-            Spacer()        }
+                ]
+            ){
+                ForEach(
+                    viewModel.cards,
+                    content: {
+                        card in
+                        CardView(
+                            card: card
+                        ).aspectRatio(
+                            2/3,
+                            contentMode: .fit
+                        ).onTapGesture {
+                            viewModel.choose(card)
+                        }
+                    }
+                )
+            }.padding(.all)
+        }
     }
 }
 
 struct CardView : View{
-    @State var isFaceUp : Bool = false
-    var content : String
+    let card: MemoryGame<String>.Card
+    
     var body: some View{
             ZStack(
                 alignment: .center,
@@ -54,7 +50,7 @@ struct CardView : View{
                     let shape = RoundedRectangle(
                     cornerRadius: 20
                     )
-                    if(isFaceUp){
+                    if(card.isFaceUp){
                         shape
                         .stroke(
                             lineWidth: 3
@@ -71,7 +67,7 @@ struct CardView : View{
                         .foregroundColor(
                             .white
                         )
-                        Text(content)
+                        Text(card.content)
                             .font(.largeTitle)
                         .foregroundColor(Color.pink)
                         .multilineTextAlignment(.center)
@@ -83,17 +79,20 @@ struct CardView : View{
                         )
                     }
                 }
-            ).onTapGesture {
-                isFaceUp = !isFaceUp
-            }
+            )
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
+   static let game = EmojiMemoryGame()
     static var previews: some View {
-        ContentView()
+        ContentView(
+        viewModel: game
+        )
             .preferredColorScheme(.light)
-        ContentView()
-            .preferredColorScheme(.dark)
+        ContentView(
+        viewModel: game
+        )
+        .preferredColorScheme(.dark)
     }
 }
