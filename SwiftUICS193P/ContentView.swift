@@ -12,36 +12,6 @@ struct ContentView: View {
     
     @State var emojiCount = 3
     
-    var removeBtn : some View{
-        Button(
-            action: {
-                if(emojiCount > 0){
-                        emojiCount-=1
-                }
-            },
-            label: {
-                Image(
-                    systemName: "minus.circle"
-                )
-            }
-        )
-    }
-    
-    var addBtn : some View{
-            Button(
-                action: {
-                    if(emojiCount < vehicles.count-1){
-                            emojiCount+=1
-                    }
-                },
-                label: {
-                    Image(
-                        systemName: "plus.circle"
-                    )
-                }
-            )
-    }
-    
     var body: some View {
         VStack{
             ScrollView{
@@ -70,15 +40,7 @@ struct ContentView: View {
                     )
                 }.padding(.all)
             }
-            Spacer()
-            HStack{
-                removeBtn
-                Spacer()
-                addBtn
-            }
-            .padding(.horizontal)
-            .font(.largeTitle)
-        }
+            Spacer()        }
     }
 }
 
