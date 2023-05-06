@@ -71,6 +71,8 @@ struct CardView : View{
                             .font(.largeTitle)
                         .foregroundColor(Color.pink)
                         .multilineTextAlignment(.center)
+                    } else if(card.isMatched){
+                        shape.opacity(0)
                     }else{
                         shape
                         .fill()
